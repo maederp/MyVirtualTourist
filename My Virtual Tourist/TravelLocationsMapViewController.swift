@@ -173,7 +173,6 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, NSF
             print("at .Delete Object")
         case .Update:
             print("at .Update Object")
-            CoreDataStackManager.sharedInstance().saveContext()
         default:
             print("ran into default")
             return

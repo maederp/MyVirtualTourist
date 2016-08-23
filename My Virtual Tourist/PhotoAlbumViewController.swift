@@ -20,6 +20,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     @IBOutlet weak var photoAlbumCollectionView: UICollectionView!
     
+    var insertedIndexPaths: [NSIndexPath]!
+    var deletedIndexPaths: [NSIndexPath]!
+    var updatedIndexPaths: [NSIndexPath]!
     
     // Context
     var sharedContext: NSManagedObjectContext {
@@ -103,6 +106,43 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
     
+    // MARK: FetchedResultsController Delegate Section
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        insertedIndexPaths = [NSIndexPath]()
+        deletedIndexPaths = [NSIndexPath]()
+        updatedIndexPaths = [NSIndexPath]()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        
+        switch type{
+            
+        case .Insert:
+            insertedIndexPaths.append(newIndexPath!)
+        case .Delete:
+            deletedIndexPaths.append(indexPath!)
+        case .Update:
+            updatedIndexPaths.append(indexPath!)
+        case .Move:
+            print("Move an item. We don't expect to see this in this app.")
+        }
+        
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        photoAlbumCollectionView.performBatchUpdates( {() -> Void in
+            
+            self.photoAlbumCollectionView.insertItemsAtIndexPaths(self.insertedIndexPaths)
+            
+            self.photoAlbumCollectionView.deleteItemsAtIndexPaths(self.deletedIndexPaths)
+
+            self.photoAlbumCollectionView.reloadItemsAtIndexPaths(self.updatedIndexPaths)
+            
+            }, completion: nil)
+    }
+    
+    
     // MARK: CollectionView Section
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
@@ -135,24 +175,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        
-        let photos = pin.photos?.mutableCopy() as! NSMutableOrderedSet
-        
-        photos.removeObjectAtIndex(indexPath.item)
-        
-        pin.replaceFotos(photos)
-        CoreDataStackManager.sharedInstance().saveContext()
-        
-        // MARK: fetch CoreData
-        do{
-            try fetchedResultsController.performFetch()
-        }catch{
-            print(error)
-        }
-        
-        dispatch_async(dispatch_get_main_queue()) {
-            self.photoAlbumCollectionView.reloadData()
-        }
+        sharedContext.deleteObject(fetchedResultsController.objectAtIndexPath(indexPath) as! Photo)
     }
     
     
@@ -179,26 +202,15 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     func reloadHandler(action: UIAlertAction!){
         
         // delete all photos for this pin
-        let photos = pin.photos?.mutableCopy() as! NSMutableOrderedSet
-        photos.removeAllObjects()
-        pin.replaceFotos(photos)
-        
-        CoreDataStackManager.sharedInstance().saveContext()
+        if let photos = pin.photos {
+            for photo in photos {
+                sharedContext.deleteObject(photo as! NSManagedObject)
+            }
+        }
         
         FlickrClient.sharedInstance().getFotoListByGeoLocation(pin){ (success, error) in
             if error == nil{
                 print("Fotos loaded into CoreData")
-                
-                // MARK: fetch CoreData
-                do{
-                    try self.fetchedResultsController.performFetch()
-                    dispatch_async(dispatch_get_main_queue()) {
-                        self.photoAlbumCollectionView.reloadData()
-                    }
-                }catch{
-                    print(error)
-                }
-                
             }else{
                 print ("Error: \(error?.domain)")
             }

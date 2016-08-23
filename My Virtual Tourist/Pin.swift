@@ -35,10 +35,6 @@ class Pin: NSManagedObject, MKAnnotation {
         timestamp = dictionary[Keys.Timestamp] as? NSDate
     }
     
-    func replaceFotos(newFotos: NSMutableOrderedSet){
-        self.photos = newFotos
-    }
-    
     // MARK: MKAnnotation Protocol requirements
     var title: String? {
         return timestamp?.description ?? "New Pin"
