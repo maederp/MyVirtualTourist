@@ -35,7 +35,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // MARK: fetch CoreData
+        // MARK: fetch Photos from CoreData
         do{
             try fetchedResultsController.performFetch()
         }catch{
@@ -70,7 +70,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         pin.showOnMapView(self.pinLocationMapView)
         
         if pin.photos?.count == 0 {
-            FlickrClient.sharedInstance().getFotoListByGeoLocation(pin){ (success, error) in
+            
+            // If no Fotos present we load the first Page of Flickr Fotos, so flickrInfo = nil
+            FlickrClient.sharedInstance().getFotoListByGeoLocation(pin, flickrInfo: nil){ (success, error) in
                 if error == nil{
                     print("Fotos loaded into CoreData")
                 }else{
@@ -93,7 +95,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         return fetchedResultsController
     }()
     
-
+    
     // MARK: MapView Section
     func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         let customPinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "locationPinView")
@@ -208,7 +210,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             }
         }
         
-        FlickrClient.sharedInstance().getFotoListByGeoLocation(pin){ (success, error) in
+        FlickrClient.sharedInstance().getFotoListByGeoLocation(pin, flickrInfo: pin.flickrInfo){ (success, error) in
             if error == nil{
                 print("Fotos loaded into CoreData")
             }else{

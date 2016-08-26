@@ -10,7 +10,14 @@ import Foundation
 extension FlickrClient{
     
     // MARK: Get fotos by geo location
-    func getFotoListByGeoLocation(locationPin: Pin, completionHandler: CompletionHandler) {
+    func getFotoListByGeoLocation(locationPin: Pin, flickrInfo: FlickrInfo?, completionHandler: CompletionHandler) {
+        
+        var flickrSearchPage = 1
+        
+        if flickrInfo != nil{
+            flickrSearchPage = flickrInfo?.lastUsedPage as! Int
+            flickrSearchPage += 1
+        }
         
         // TODO: find a way to retrieve current map span
         let parameters : [String:AnyObject] = [
@@ -19,7 +26,8 @@ extension FlickrClient{
             FlickrClient.ConstantsFlickrPhotoSearch.Radius : 5,
             FlickrClient.ConstantsFlickrPhotoSearch.Format : "json",
             FlickrClient.ConstantsFlickrPhotoSearch.NoJSONCallBack : 1,
-            FlickrClient.ConstantsFlickrPhotoSearch.Per_page : 12
+            FlickrClient.ConstantsFlickrPhotoSearch.Per_page : 12,
+            FlickrClient.ConstantsFlickrPhotoSearch.Page : flickrSearchPage
         ]
         
         taskForGETMethod(FlickrClient.Methods.FlickrPhotoSearch, parameters: parameters) { (results, error) in
@@ -29,6 +37,23 @@ extension FlickrClient{
             } else {
                 
                 if let photos = results[FlickrClient.ConstantsFlickrPhotoSearchResponse.Photos] as? [String:AnyObject] {
+                    
+                    if flickrInfo != nil {
+                        flickrInfo?.lastUsedPage = photos[ConstantsFlickrPhotoSearchResponse.Page] as! Int
+                    }else{
+                        //Add FlickR search info relationship to Pin
+                        let addFlickrInfo : [String:AnyObject?] = [
+                            FlickrInfo.Keys.MaxPages : photos[ConstantsFlickrPhotoSearchResponse.Pages],
+                            FlickrInfo.Keys.Pin : locationPin,
+                            FlickrInfo.Keys.LastUsedPage : photos[ConstantsFlickrPhotoSearchResponse.Page],
+                            FlickrInfo.Keys.TotalImages : photos[ConstantsFlickrPhotoSearchResponse.Total]
+                        ]
+                        
+                        let _ = FlickrInfo(dictionary: addFlickrInfo, context: self.sharedContext)
+                    }
+                    
+
+                    //Download & add Fotos
                     
                     if let photoArray = photos[FlickrClient.ConstantsFlickrPhotoSearchResponse.Photo] as? [[String:AnyObject]]{
                         

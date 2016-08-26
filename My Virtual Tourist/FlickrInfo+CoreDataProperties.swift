@@ -1,5 +1,5 @@
 //
-//  Pin+CoreDataProperties.swift
+//  FlickrInfo+CoreDataProperties.swift
 //  My Virtual Tourist
 //
 //  Created by Peter Mäder on 26.08.16.
@@ -12,12 +12,11 @@
 import Foundation
 import CoreData
 
-extension Pin {
+extension FlickrInfo {
 
-    @NSManaged var latitude: NSNumber?
-    @NSManaged var longitude: NSNumber?
-    @NSManaged var timestamp: NSDate?
-    @NSManaged var photos: NSOrderedSet?
-    @NSManaged var flickrInfo: FlickrInfo?
+    @NSManaged var lastUsedPage: NSNumber?
+    @NSManaged var maxPages: NSNumber?
+    @NSManaged var totalImages: String?
+    @NSManaged var pin: Pin?
 
 }

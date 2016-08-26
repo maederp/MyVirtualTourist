@@ -18,6 +18,7 @@ class Pin: NSManagedObject, MKAnnotation {
         static let Longitude = "longitude"
         static let Timestamp = "timestamp"
         static let Fotos = "fotos"
+        static let FlickrInfo = "flickrInfo"
     }
 
     override init(entity: NSEntityDescription, insertIntoManagedObjectContext context: NSManagedObjectContext?) {

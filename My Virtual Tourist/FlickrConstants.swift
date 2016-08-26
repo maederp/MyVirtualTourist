@@ -41,6 +41,9 @@ extension FlickrClient{
         static let owner = "owner"
         static let source = "source"
         static let title = "title"
+        static let Page = "page"
+        static let Pages = "pages"
+        static let Total = "total"
     }
     
     // MARK: Flickr GetSizes Constants

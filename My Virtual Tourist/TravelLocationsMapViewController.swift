@@ -160,7 +160,8 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, NSF
             let newPin = controller.objectAtIndexPath(newIndexPath!) as! Pin
             newPin.showOnMapView(self.travelLocationsMapView)
 
-            FlickrClient.sharedInstance().getFotoListByGeoLocation(newPin){ (success, error) in
+            // If no Fotos present we load the first Page of Flickr Fotos, so flickrInfo = nil
+            FlickrClient.sharedInstance().getFotoListByGeoLocation(newPin, flickrInfo: nil){ (success, error) in
                 
                 if error == nil{
                     print("Fotos loaded into CoreData")
