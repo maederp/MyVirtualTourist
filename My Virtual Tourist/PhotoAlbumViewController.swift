@@ -161,10 +161,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! FlickrImageCollectionsViewCell
         
-//        dispatch_async(dispatch_get_main_queue()) {
-//            cell.imageView.image = UIImage(imageLiteral: "FotoPlaceholder")
-//        }
-        
         if let imageData = photo?.image {
             dispatch_async(dispatch_get_main_queue()) {
                 cell.imageView.image = UIImage(data: imageData)

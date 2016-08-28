@@ -96,7 +96,6 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="api-1R-1Lm" firstAttribute="top" secondItem="O5k-df-hj7" secondAttribute="top" id="1p8-5b-uYz"/>
                                             <constraint firstAttribute="bottom" secondItem="api-1R-1Lm" secondAttribute="bottom" id="EzI-xn-oTj"/>
