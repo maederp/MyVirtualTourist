@@ -49,9 +49,11 @@ class Pin: NSManagedObject, MKAnnotation {
     func showOnMapView(view: MKMapView){
     
         let annotation = MKPointAnnotation()
-    
+        
+        let locale = NSLocale(localeIdentifier: "en-US")
+        
         annotation.coordinate = self.coordinate
-        annotation.title = self.timestamp?.description ?? "New Pin"
+        annotation.title = "\(self.timestamp!.descriptionWithLocale(locale))"
         
         view.addAnnotation(annotation)
         view.viewForAnnotation(annotation)
