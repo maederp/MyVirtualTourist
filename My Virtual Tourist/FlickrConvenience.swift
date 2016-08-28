@@ -12,11 +12,14 @@ extension FlickrClient{
     // MARK: Get fotos by geo location
     func getFotoListByGeoLocation(locationPin: Pin, flickrInfo: FlickrInfo?, completionHandler: CompletionHandler) {
         
+        //initialize Flickr Page to 1
         var flickrSearchPage = 1
         
+        
         if flickrInfo != nil{
-            flickrSearchPage = flickrInfo?.lastUsedPage as! Int
-            flickrSearchPage += 1
+            let flickrMaxPage = flickrInfo?.maxPages as! Int
+            flickrSearchPage = Int(arc4random_uniform(UInt32(flickrMaxPage))+1)
+            print("SearchPage: \(flickrSearchPage)")
         }
         
         // TODO: find a way to retrieve current map span
@@ -50,6 +53,7 @@ extension FlickrClient{
                         ]
                         
                         let _ = FlickrInfo(dictionary: addFlickrInfo, context: self.sharedContext)
+                        print("added")
                     }
                     
 

@@ -161,9 +161,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! FlickrImageCollectionsViewCell
         
-        dispatch_async(dispatch_get_main_queue()) {
-            cell.imageView.image = UIImage(imageLiteral: "FotoPlaceholder")
-        }
+//        dispatch_async(dispatch_get_main_queue()) {
+//            cell.imageView.image = UIImage(imageLiteral: "FotoPlaceholder")
+//        }
         
         if let imageData = photo?.image {
             dispatch_async(dispatch_get_main_queue()) {
@@ -173,8 +173,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         
         return cell
     }
-    
-    
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         sharedContext.deleteObject(fetchedResultsController.objectAtIndexPath(indexPath) as! Photo)
@@ -208,6 +206,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             for photo in photos {
                 sharedContext.deleteObject(photo as! NSManagedObject)
             }
+            CoreDataStackManager.sharedInstance().saveContext()
         }
         
         FlickrClient.sharedInstance().getFotoListByGeoLocation(pin, flickrInfo: pin.flickrInfo){ (success, error) in
@@ -217,7 +216,5 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 print ("Error: \(error?.domain)")
             }
         }
-        
-        
     }
 }
