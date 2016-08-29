@@ -9,15 +9,14 @@
 import Foundation
 import CoreData
 
-class FlickrClient: NSObject {
+class FlickrClient {
     
     typealias CompletionHandler = (result: AnyObject!, error: NSError?) -> Void
     
     var session: NSURLSession
     
-    override init() {
+    init() {
         session = NSURLSession.sharedSession()
-        super.init()
     }
     
     // MARK: - Shared Instance

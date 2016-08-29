@@ -35,11 +35,9 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, NSF
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        travelLocationsMapView.delegate = self
-        
         // MARK: Add LongPressGestureRecognizer
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.respondToLongPressGesture))
-        longPressGestureRecognizer.minimumPressDuration = CFTimeInterval(0.8)
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(respondToLongPressGesture))
+        longPressGestureRecognizer.minimumPressDuration = CFTimeInterval(1.0)
         
         travelLocationsMapView.addGestureRecognizer(longPressGestureRecognizer)
         
@@ -58,7 +56,7 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, NSF
         super.viewWillAppear(animated)
         
         // Hide the navigation bar in TravelLocation Map View
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: true)
         
         // TODO: Put Region setting into own Method
         // Retrieve User Defaults
@@ -158,7 +156,7 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, NSF
         case .Insert:
           
             let newPin = controller.objectAtIndexPath(newIndexPath!) as! Pin
-            newPin.showOnMapView(self.travelLocationsMapView)
+            newPin.showOnMapView(travelLocationsMapView)
 
             // If no Fotos present we load the first Page of Flickr Fotos, so flickrInfo = nil
             FlickrClient.sharedInstance().getFotoListByGeoLocation(newPin, flickrInfo: nil){ (success, error) in
@@ -179,13 +177,7 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, NSF
             return
         }
     }
-    
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-    }
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        
-    }
+
     
     func addPinToStack(location: CLLocationCoordinate2D){
         
@@ -197,7 +189,7 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, NSF
             Pin.Keys.Timestamp : date_local
         ]
         
-        let _ = Pin(dictionary: dictionary, context: self.sharedContext)
+        let _ = Pin(dictionary: dictionary, context: sharedContext)
         
         CoreDataStackManager.sharedInstance().saveContext()
     }
@@ -206,13 +198,13 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, NSF
     // MARK: Gesture Recognizer Section
     func respondToLongPressGesture(recognizer: UILongPressGestureRecognizer){
         
-        // catch only 1 single gesture so limit to state = Ended
-        if (recognizer.state == UIGestureRecognizerState.Ended){
-            let location = recognizer.locationInView(self.travelLocationsMapView)
-            let coordinates = travelLocationsMapView.convertPoint(location, toCoordinateFromView: self.travelLocationsMapView)
-            
-            addPinToStack(coordinates)
+        if (recognizer.state != UIGestureRecognizerState.Began){
+            return
         }
         
+        let location = recognizer.locationInView(travelLocationsMapView)
+        let coordinates = travelLocationsMapView.convertPoint(location, toCoordinateFromView: travelLocationsMapView)
+        
+        addPinToStack(coordinates)
     }
 }

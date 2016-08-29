@@ -38,7 +38,9 @@ class Pin: NSManagedObject, MKAnnotation {
     
     // MARK: MKAnnotation Protocol requirements
     var title: String? {
-        return timestamp?.description ?? "New Pin"
+        let locale = NSLocale(localeIdentifier: "en-US")
+        
+        return "\(self.timestamp!.descriptionWithLocale(locale))" ?? "New Pin"
     }
     
     var coordinate: CLLocationCoordinate2D {

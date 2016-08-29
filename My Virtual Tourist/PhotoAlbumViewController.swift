@@ -43,22 +43,20 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         }
         
         fetchedResultsController.delegate = self
-        photoAlbumCollectionView.delegate = self
-        
-        photoAlbumCollectionView.dataSource = self
+
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         // Make Navigation Bar visible
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.setNavigationBarHidden(false, animated: true)
         
         // Create Return/Done Navigation Button
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(PhotoAlbumViewController.dismissViewController) )
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(PhotoAlbumViewController.dismissViewController) )
         
         // Create Add/Reload Navigation Button
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reload", style: .Done, target: self, action: #selector(PhotoAlbumViewController.loadNewSetOfPhotos))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Reload", style: .Done, target: self, action: #selector(PhotoAlbumViewController.loadNewSetOfPhotos))
         
         let center : CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: pin.latitude!.doubleValue, longitude: pin.longitude!.doubleValue)
         let span = MKCoordinateSpan(latitudeDelta: 3, longitudeDelta: 3)
@@ -67,7 +65,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         pinLocationMapView.setRegion(currentRegion, animated: true)
         pinLocationMapView.scrollEnabled = false
         
-        pin.showOnMapView(self.pinLocationMapView)
+        pin.showOnMapView(pinLocationMapView)
         
         if pin.photos?.count == 0 {
             
@@ -160,6 +158,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
         let cellIdentifier = "FlickrImageCollectionsViewCell"
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(cellIdentifier, forIndexPath: indexPath) as! FlickrImageCollectionsViewCell
+        
+        cell.imageView.image = UIImage(imageLiteral: "FotoPlaceholder")
         
         if let imageData = photo?.image {
             dispatch_async(dispatch_get_main_queue()) {

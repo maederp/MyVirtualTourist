@@ -19,7 +19,10 @@ extension FlickrClient{
             var flickrMaxPage = flickrInfo?.maxPages as! Int
             
             //make sure search results only up to 4000 Pictures (333 Pages x 12 per Page)
-            flickrMaxPage = (flickrMaxPage < 333) ? flickrMaxPage : Int(arc4random_uniform(UInt32(333))+1)
+            let maxPagesOfFlickrImageReturns = 333
+            
+            //FIX: avoid magic Numbers!
+            flickrMaxPage = (flickrMaxPage < maxPagesOfFlickrImageReturns) ? flickrMaxPage : Int(arc4random_uniform(UInt32(333))+1)
             
             flickrSearchPage = Int(arc4random_uniform(UInt32(flickrMaxPage))+1)
             print("SearchPage: \(flickrSearchPage)")

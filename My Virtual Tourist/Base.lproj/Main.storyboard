@@ -35,6 +35,9 @@
                         <subviews>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="id9-Zf-asa">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <connections>
+                                    <outlet property="delegate" destination="7hq-mA-MG7" id="Q4M-ZS-f82"/>
+                                </connections>
                             </mapView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -72,6 +75,9 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="175" id="jXe-pg-THc"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="delegate" destination="dNR-ao-pKd" id="gh4-BI-kVq"/>
+                                </connections>
                             </mapView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ATo-un-9Ch">
                                 <rect key="frame" x="0.0" y="239" width="600" height="361"/>
@@ -108,6 +114,10 @@
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="dNR-ao-pKd" id="cFX-5f-9oD"/>
+                                    <outlet property="delegate" destination="dNR-ao-pKd" id="IkQ-gK-neL"/>
+                                </connections>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
