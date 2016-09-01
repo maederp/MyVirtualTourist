@@ -96,21 +96,27 @@
                                             <rect key="frame" x="0.0" y="0.0" width="100" height="75"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FotoPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="api-1R-1Lm">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="api-1R-1Lm">
                                                     <rect key="frame" x="0.0" y="0.0" width="100" height="75"/>
                                                 </imageView>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Kzl-MF-mcg">
+                                                    <rect key="frame" x="40" y="28" width="20" height="20"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="api-1R-1Lm" firstAttribute="top" secondItem="O5k-df-hj7" secondAttribute="top" id="1p8-5b-uYz"/>
                                             <constraint firstAttribute="bottom" secondItem="api-1R-1Lm" secondAttribute="bottom" id="EzI-xn-oTj"/>
+                                            <constraint firstItem="Kzl-MF-mcg" firstAttribute="centerX" secondItem="O5k-df-hj7" secondAttribute="centerX" id="FXD-KP-I6i"/>
                                             <constraint firstItem="api-1R-1Lm" firstAttribute="leading" secondItem="O5k-df-hj7" secondAttribute="leading" id="IA4-12-QKy"/>
+                                            <constraint firstItem="Kzl-MF-mcg" firstAttribute="centerY" secondItem="O5k-df-hj7" secondAttribute="centerY" id="Mfr-HU-12r"/>
                                             <constraint firstAttribute="trailing" secondItem="api-1R-1Lm" secondAttribute="trailing" id="dsW-Ej-Fo9"/>
                                         </constraints>
                                         <size key="customSize" width="100" height="75"/>
                                         <connections>
                                             <outlet property="imageView" destination="api-1R-1Lm" id="VSm-kl-PwS"/>
+                                            <outlet property="imageViewActivityIndicator" destination="Kzl-MF-mcg" id="GK6-rP-7Ub"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -141,7 +147,4 @@
             <point key="canvasLocation" x="1241" y="379"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="FotoPlaceholder" width="92" height="138"/>
-    </resources>
 </document>

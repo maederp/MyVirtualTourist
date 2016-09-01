@@ -165,7 +165,35 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
             dispatch_async(dispatch_get_main_queue()) {
                 cell.imageView.image = UIImage(data: imageData)
             }
-        } 
+        } else {
+            
+            guard let photoID = photo?.id else{
+                return cell
+            }
+            
+            cell.imageViewActivityIndicator.startAnimating()
+            
+            FlickrClient.sharedInstance().getFotoForId(photoID){ (image, error) in
+                
+                if image != nil {
+                    
+                    photo?.image = image as? NSData
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        cell.imageView.image = UIImage(data: (photo?.image)!)
+                        cell.imageViewActivityIndicator.stopAnimating()
+                    }
+                
+                } else {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        cell.imageViewActivityIndicator.stopAnimating()
+                    }
+                }
+            }
+            
+        }
+        
+
         
         return cell
     }

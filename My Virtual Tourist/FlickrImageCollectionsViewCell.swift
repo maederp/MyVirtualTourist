@@ -12,4 +12,5 @@ class FlickrImageCollectionsViewCell: UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
  
+    @IBOutlet weak var imageViewActivityIndicator: UIActivityIndicatorView!
 }

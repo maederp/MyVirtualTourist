@@ -25,7 +25,6 @@ extension FlickrClient{
             flickrMaxPage = (flickrMaxPage < maxPagesOfFlickrImageReturns) ? flickrMaxPage : Int(arc4random_uniform(UInt32(333))+1)
             
             flickrSearchPage = Int(arc4random_uniform(UInt32(flickrMaxPage))+1)
-            print("SearchPage: \(flickrSearchPage)")
         }
         
         // TODO: find a way to retrieve current map span
@@ -59,7 +58,6 @@ extension FlickrClient{
                         ]
                         
                         let _ = FlickrInfo(dictionary: addFlickrInfo, context: self.sharedContext)
-                        print("added")
                     }
                     
 
@@ -69,34 +67,19 @@ extension FlickrClient{
                         
                         for photo in photoArray{
                             
-                            self.getFotoForId((photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.id] as! String)){ (image, error) in
-                                
-                                if image != nil{
-                                    
-                                    let addFotoDict : [String:AnyObject?] = [
-                                        Photo.Keys.ID : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.id],
-                                        Photo.Keys.Owner : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.owner],
-                                        Photo.Keys.Pin : locationPin,
-                                        Photo.Keys.Source : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.source],
-                                        Photo.Keys.Title : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.title],
-                                        Photo.Keys.Image : (image as! NSData)
-                                    ]
-                                    
-                                    let _ = Photo(dictionary: addFotoDict, context: self.sharedContext)
-                                }else{
-                                    let addFotoDict : [String:AnyObject?] = [
-                                        Photo.Keys.ID : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.id],
-                                        Photo.Keys.Owner : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.owner],
-                                        Photo.Keys.Pin : locationPin,
-                                        Photo.Keys.Source : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.source],
-                                        Photo.Keys.Title : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.title],
-                                        Photo.Keys.Image : nil
-                                    ]
-                                    
-                                    let _ = Photo(dictionary: addFotoDict, context: self.sharedContext)
-                                }
-                            }
+                            let addFotoDict : [String:AnyObject?] = [
+                                Photo.Keys.ID : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.id],
+                                Photo.Keys.Owner : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.owner],
+                                Photo.Keys.Pin : locationPin,
+                                Photo.Keys.Source : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.source],
+                                Photo.Keys.Title : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.title],
+                                Photo.Keys.Image : nil
+                            ]
+                            
+                            let _ = Photo(dictionary: addFotoDict, context: self.sharedContext)
+                            
                         }
+                        
                         CoreDataStackManager.sharedInstance().saveContext()
                         completionHandler(result: true, error: nil)
                     }
@@ -129,7 +112,6 @@ extension FlickrClient{
                                 let sourceUrlString = (size[FlickrClient.ConstantsFlickrGetSizesResponse.Source] as! String)
                                 
                                 let url = NSURL(string: sourceUrlString)
-                                print("hier bin ich \(url)")
                                 
                                 let request = NSURLRequest(URL: url!)
                                 
