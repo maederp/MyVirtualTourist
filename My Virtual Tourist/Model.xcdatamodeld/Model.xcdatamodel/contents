@@ -22,8 +22,8 @@
         <relationship name="photos" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Photo" inverseName="pin" inverseEntity="Photo" syncable="YES"/>
     </entity>
     <elements>
+        <element name="FlickrInfo" positionX="-63" positionY="54" width="128" height="105"/>
         <element name="Photo" positionX="-54" positionY="18" width="128" height="135"/>
         <element name="Pin" positionX="-63" positionY="-18" width="128" height="120"/>
-        <element name="FlickrInfo" positionX="-63" positionY="54" width="128" height="105"/>
     </elements>
 </model>

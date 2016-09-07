@@ -131,15 +131,17 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        photoAlbumCollectionView.performBatchUpdates( {() -> Void in
+        
+        self.photoAlbumCollectionView.performBatchUpdates( {() -> Void in
             
             self.photoAlbumCollectionView.insertItemsAtIndexPaths(self.insertedIndexPaths)
             
             self.photoAlbumCollectionView.deleteItemsAtIndexPaths(self.deletedIndexPaths)
-
+            
             self.photoAlbumCollectionView.reloadItemsAtIndexPaths(self.updatedIndexPaths)
             
             }, completion: nil)
+        
     }
     
     
@@ -171,15 +173,18 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
                 return cell
             }
             
-            cell.imageViewActivityIndicator.startAnimating()
+            dispatch_async(dispatch_get_main_queue()) {
+                cell.imageViewActivityIndicator.startAnimating()
+            }
             
             FlickrClient.sharedInstance().getFotoForId(photoID){ (image, error) in
                 
                 if image != nil {
                     
-                    photo?.image = image as? NSData
+                    dispatch_async(dispatch_get_main_queue()){
+                        photo?.image = image as? NSData
+                        CoreDataStackManager.sharedInstance().saveContext()
                     
-                    dispatch_async(dispatch_get_main_queue()) {
                         cell.imageView.image = UIImage(data: (photo?.image)!)
                         cell.imageViewActivityIndicator.stopAnimating()
                     }
@@ -200,6 +205,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectio
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         sharedContext.deleteObject(fetchedResultsController.objectAtIndexPath(indexPath) as! Photo)
+        CoreDataStackManager.sharedInstance().saveContext()
     }
     
     

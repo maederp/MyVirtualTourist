@@ -46,18 +46,22 @@ extension FlickrClient{
                 
                 if let photos = results[FlickrClient.ConstantsFlickrPhotoSearchResponse.Photos] as? [String:AnyObject] {
                     
-                    if flickrInfo != nil {
-                        flickrInfo?.lastUsedPage = photos[ConstantsFlickrPhotoSearchResponse.Page] as! Int
-                    }else{
-                        //Add FlickR search info relationship to Pin
-                        let addFlickrInfo : [String:AnyObject?] = [
-                            FlickrInfo.Keys.MaxPages : photos[ConstantsFlickrPhotoSearchResponse.Pages],
-                            FlickrInfo.Keys.Pin : locationPin,
-                            FlickrInfo.Keys.LastUsedPage : photos[ConstantsFlickrPhotoSearchResponse.Page],
-                            FlickrInfo.Keys.TotalImages : photos[ConstantsFlickrPhotoSearchResponse.Total]
-                        ]
-                        
-                        let _ = FlickrInfo(dictionary: addFlickrInfo, context: self.sharedContext)
+                    // CoreData access to happen in main queue !
+                    dispatch_async(dispatch_get_main_queue()){
+                        if flickrInfo != nil {
+                            flickrInfo?.lastUsedPage = photos[ConstantsFlickrPhotoSearchResponse.Page] as! Int
+                            CoreDataStackManager.sharedInstance().saveContext()
+                        }else{
+                            //Add FlickR search info relationship to Pin
+                            let addFlickrInfo : [String:AnyObject?] = [
+                                FlickrInfo.Keys.MaxPages : photos[ConstantsFlickrPhotoSearchResponse.Pages],
+                                FlickrInfo.Keys.Pin : locationPin,
+                                FlickrInfo.Keys.LastUsedPage : photos[ConstantsFlickrPhotoSearchResponse.Page],
+                                FlickrInfo.Keys.TotalImages : photos[ConstantsFlickrPhotoSearchResponse.Total]
+                            ]
+                            
+                            let _ = FlickrInfo(dictionary: addFlickrInfo, context: self.sharedContext)
+                        }
                     }
                     
 
@@ -65,23 +69,26 @@ extension FlickrClient{
                     
                     if let photoArray = photos[FlickrClient.ConstantsFlickrPhotoSearchResponse.Photo] as? [[String:AnyObject]]{
                         
-                        for photo in photoArray{
+                        // CoreData access to happen in main queue !
+                        dispatch_async(dispatch_get_main_queue()){
                             
-                            let addFotoDict : [String:AnyObject?] = [
-                                Photo.Keys.ID : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.id],
-                                Photo.Keys.Owner : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.owner],
-                                Photo.Keys.Pin : locationPin,
-                                Photo.Keys.Source : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.source],
-                                Photo.Keys.Title : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.title],
-                                Photo.Keys.Image : nil
-                            ]
+                            for photo in photoArray{
+                                
+                                let addFotoDict : [String:AnyObject?] = [
+                                    Photo.Keys.ID : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.id],
+                                    Photo.Keys.Owner : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.owner],
+                                    Photo.Keys.Pin : locationPin,
+                                    Photo.Keys.Source : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.source],
+                                    Photo.Keys.Title : photo[FlickrClient.ConstantsFlickrPhotoSearchResponse.title],
+                                    Photo.Keys.Image : nil
+                                ]
+                                
+                                let _ = Photo(dictionary: addFotoDict, context: self.sharedContext)
+                            }
                             
-                            let _ = Photo(dictionary: addFotoDict, context: self.sharedContext)
-                            
+                            CoreDataStackManager.sharedInstance().saveContext()
+                            completionHandler(result: true, error: nil)
                         }
-                        
-                        CoreDataStackManager.sharedInstance().saveContext()
-                        completionHandler(result: true, error: nil)
                     }
                 } else {
                     completionHandler(result: false, error: NSError(domain: "getFotoListByGeoLocation parsing", code: 0, userInfo: [NSLocalizedDescriptionKey: "Could not parse getFotoListByGeoLocation Json"]))
